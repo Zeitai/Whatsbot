@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsBOT — Dashboard</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --surface-0:#F7F7F5; --surface-1:#FFFFFF; --surface-2:#FFFFFF;
+  --text-primary:#1F2320; --text-secondary:#4A4F4B; --text-muted:#8A8F8A;
+  --border:#E5E7E3; --border-strong:#D3D6D0; --border-stronger:#B8BCB6; --border-danger:#F1AEAE;
+  --bg-success:#E7F8EC; --text-success:#1E8E4A;
+  --bg-danger:#FDECEC; --text-danger:#C0392B;
+  --bg-warning:#FFF6E5; --text-warning:#B7791F;
+  --bg-accent:#EAF1FD; --text-accent:#1A56DB;
+  --radius:8px; --font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; --font-mono:'SF Mono',Consolas,monospace;
+}
+</style>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#25D366;--green-dark:#128C7E;--green-light:#DCF8C6;--wa-bg:#ECE5DD}
+body{font-family:var(--font-sans,sans-serif);background:var(--surface-0);color:var(--text-primary)}
+.app{display:flex;height:100vh;min-height:600px;overflow:hidden}
+.sidebar{width:220px;min-width:220px;background:var(--surface-1);border-right:0.5px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.logo{padding:16px 14px 12px;border-bottom:0.5px solid var(--border)}
+.logo-mark{display:flex;align-items:center;gap:8px}
+.logo-icon{width:28px;height:28px;background:#25D366;border-radius:7px;display:flex;align-items:center;justify-content:center}
+.logo-icon i{color:#fff;font-size:15px}
+.logo-text{font-size:14px;font-weight:500;color:var(--text-primary)}
+.logo-sub{font-size:11px;color:var(--text-muted)}
+.nav{padding:10px 8px;flex:1;overflow-y:auto}
+.nav-section{font-size:10px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.7px;padding:10px 6px 4px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:var(--radius);cursor:pointer;font-size:13px;color:var(--text-secondary);transition:background .15s}
+.nav-item:hover{background:var(--surface-2);color:var(--text-primary)}
+.nav-item.active{background:var(--bg-success);color:var(--text-success)}
+.nav-item i{font-size:16px;width:18px}
+.nav-item .badge{margin-left:auto;background:var(--bg-danger);color:var(--text-danger);font-size:10px;padding:1px 6px;border-radius:9px;font-weight:500}
+.nav-status{margin-top:auto;padding:10px 8px;border-top:0.5px solid var(--border)}
+.plan-pill{background:var(--bg-warning);color:var(--text-warning);font-size:11px;padding:3px 8px;border-radius:20px;display:inline-flex;align-items:center;gap:4px}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:52px;min-height:52px;background:var(--surface-2);border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px}
+.topbar-title{font-size:16px;font-weight:500;flex:1}
+.topbar-actions{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--radius);font-size:13px;cursor:pointer;border:0.5px solid var(--border-strong);background:transparent;color:var(--text-primary);transition:background .15s}
+.btn:hover{background:var(--surface-1)}
+.btn.primary{background:#25D366;border-color:#25D366;color:#fff}
+.btn.primary:hover{background:#128C7E}
+.btn i{font-size:15px}
+.content{flex:1;overflow-y:auto;padding:20px}
+.page{display:none}
+.page.active{display:block}
+
+/* Dashboard */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--surface-1);border-radius:var(--radius);padding:14px 16px}
+.stat-label{font-size:12px;color:var(--text-muted);margin-bottom:6px}
+.stat-value{font-size:22px;font-weight:500;color:var(--text-primary)}
+.stat-change{font-size:11px;color:var(--text-success);margin-top:3px}
+.stat-change.down{color:var(--text-danger)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:16px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:500}
+.activity-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border)}
+.activity-item:last-child{border:none}
+.activity-avatar{width:32px;height:32px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:500;flex-shrink:0}
+.activity-avatar.ai{background:var(--bg-accent);color:var(--text-accent)}
+.activity-meta{font-size:12px;color:var(--text-muted);margin-top:2px}
+.activity-text{font-size:13px;color:var(--text-primary)}
+.ai-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 7px;border-radius:20px}
+.ai-badge.gemini{background:#E8F0FE;color:#1A73E8}
+.ai-badge.openai{background:#F0FFF4;color:#059669}
+.ai-badge.groq{background:#FFF7ED;color:#EA580C}
+.ai-badge.claude{background:#FEF3C7;color:#92400E}
+.ai-badge.mistral{background:#F5F3FF;color:#7C3AED}
+.status-dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.status-dot.online{background:#25D366}
+.status-dot.offline{background:var(--border-stronger)}
+.status-dot.warning{background:#F59E0B}
+
+/* Clients page */
+.client-list{display:flex;flex-direction:column;gap:10px}
+.client-card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .15s}
+.client-card:hover{border-color:var(--border-strong)}
+.client-card.selected{border-color:#25D366}
+.client-avatar{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:16px;flex-shrink:0}
+.client-info{flex:1}
+.client-name{font-size:14px;font-weight:500}
+.client-meta{font-size:12px;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;gap:8px}
+.client-actions{display:flex;gap:6px}
+
+/* Config panel */
+.config-split{display:grid;grid-template-columns:280px 1fr;gap:16px}
+.config-panel{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:16px}
+.field-group{margin-bottom:14px}
+.field-label{font-size:12px;color:var(--text-secondary);margin-bottom:5px;display:block}
+.field-input{width:100%;padding:7px 10px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-1);color:var(--text-primary);font-size:13px;font-family:inherit;outline:none}
+.field-input:focus{border-color:#25D366;box-shadow:0 0 0 2px rgba(37,211,102,.15)}
+.field-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23888' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.field-textarea{min-height:100px;resize:vertical;font-family:inherit}
+.section-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin:16px 0 10px;display:block}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border)}
+.toggle-row:last-child{border:none}
+.toggle-label{font-size:13px;color:var(--text-primary)}
+.toggle-sub{font-size:11px;color:var(--text-muted)}
+.toggle{position:relative;width:34px;height:20px}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border-strong);border-radius:20px;cursor:pointer;transition:.2s}
+.toggle-slider:before{content:"";position:absolute;width:14px;height:14px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}
+.toggle input:checked + .toggle-slider{background:#25D366}
+.toggle input:checked + .toggle-slider:before{transform:translateX(14px)}
+.ai-selector{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ai-option{border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;cursor:pointer;transition:border-color .15s}
+.ai-option:hover{border-color:var(--border-strong)}
+.ai-option.selected{border-color:#25D366;background:rgba(37,211,102,.06)}
+.ai-option-name{font-size:13px;font-weight:500;margin-bottom:2px}
+.ai-option-sub{font-size:11px;color:var(--text-muted)}
+.ai-option-free{font-size:10px;color:var(--text-success);background:var(--bg-success);padding:2px 6px;border-radius:9px;display:inline-block;margin-top:4px}
+.ai-option-paid{font-size:10px;color:var(--text-warning);background:var(--bg-warning);padding:2px 6px;border-radius:9px;display:inline-block;margin-top:4px}
+
+/* Conversations */
+.conv-layout{display:grid;grid-template-columns:280px 1fr;gap:0;height:calc(100vh - 92px);overflow:hidden}
+.conv-list{border-right:0.5px solid var(--border);overflow-y:auto}
+.conv-search{padding:10px 12px;border-bottom:0.5px solid var(--border)}
+.conv-item{padding:11px 14px;border-bottom:0.5px solid var(--border);cursor:pointer;transition:background .12s;display:flex;gap:10px;align-items:flex-start}
+.conv-item:hover{background:var(--surface-1)}
+.conv-item.active{background:var(--bg-success)}
+.conv-avatar{width:36px;height:36px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:500;flex-shrink:0}
+.conv-name{font-size:13px;font-weight:500}
+.conv-preview{font-size:12px;color:var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+.conv-time{font-size:11px;color:var(--text-muted);margin-left:auto;white-space:nowrap}
+.conv-unread{width:18px;height:18px;background:#25D366;border-radius:50%;color:#fff;font-size:10px;font-weight:500;display:flex;align-items:center;justify-content:center;margin-top:4px;margin-left:auto}
+.chat-area{display:flex;flex-direction:column;overflow:hidden}
+.chat-header{padding:12px 16px;border-bottom:0.5px solid var(--border);background:var(--surface-2);display:flex;align-items:center;gap:10px}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px;background:var(--surface-0)}
+.msg{max-width:70%;padding:9px 13px;border-radius:10px;font-size:13px;line-height:1.5}
+.msg.user{background:var(--surface-2);border:0.5px solid var(--border);align-self:flex-start;border-top-left-radius:2px}
+.msg.ai{background:#DCF8C6;color:#1a1a1a;align-self:flex-end;border-top-right-radius:2px}
+.msg-meta{font-size:11px;color:var(--text-muted);margin-top:3px}
+.msg.ai .msg-meta{text-align:right}
+.voice-msg{display:flex;align-items:center;gap:8px;padding:6px 10px}
+.voice-wave{display:flex;align-items:center;gap:2px;height:24px}
+.voice-bar{width:3px;background:#25D366;border-radius:2px}
+.chat-footer{padding:12px 16px;border-top:0.5px solid var(--border);background:var(--surface-2)}
+.chat-input-row{display:flex;gap:8px;align-items:center}
+.chat-input{flex:1;padding:8px 12px;border-radius:20px;border:0.5px solid var(--border-strong);background:var(--surface-1);font-size:13px;font-family:inherit;color:var(--text-primary);outline:none}
+.chat-input:focus{border-color:#25D366}
+.send-btn{width:36px;height:36px;border-radius:50%;background:#25D366;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.send-btn i{color:#fff;font-size:17px}
+.ai-indicator{font-size:11px;color:var(--text-muted);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.typing-dots{display:flex;gap:3px;align-items:center}
+.typing-dot{width:5px;height:5px;border-radius:50%;background:#25D366;animation:bounce .8s ease-in-out infinite}
+.typing-dot:nth-child(2){animation-delay:.15s}
+.typing-dot:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}}
+
+/* Analytics */
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
+.chart-card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:16px}
+.mini-chart{display:flex;align-items:flex-end;gap:4px;height:60px;margin-top:10px}
+.mini-bar{border-radius:3px 3px 0 0;flex:1;min-width:8px}
+.donut-wrap{display:flex;align-items:center;gap:16px;margin-top:10px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;margin-bottom:5px}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;width:480px;max-height:80vh;overflow-y:auto}
+.modal-header{padding:18px 20px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:16px;font-weight:500}
+.modal-body{padding:20px}
+.modal-footer{padding:14px 20px;border-top:0.5px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+
+/* Notification toast */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--surface-2);border:0.5px solid var(--border-strong);border-radius:var(--radius);padding:12px 16px;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:200;display:flex;align-items:center;gap:8px;transform:translateY(100px);transition:transform .3s;pointer-events:none}
+.toast.show{transform:translateY(0)}
+.toast.success{border-left:3px solid #25D366}
+.toast.error{border-left:3px solid var(--border-danger)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+</style>
+</head>
+<body>
+
+<h2 class="sr-only">WhatsBOT — WhatsApp AI SaaS Dashboard for managing clients, AI settings, and conversations</h2>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--surface-0)">
+  <div style="width:340px;background:var(--surface-1);border:0.5px solid var(--border);border-radius:12px;padding:28px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+      <div style="width:32px;height:32px;background:#25D366;border-radius:8px;display:flex;align-items:center;justify-content:center"><i class="ti ti-brand-whatsapp" style="color:#fff;font-size:17px"></i></div>
+      <div>
+        <div style="font-size:15px;font-weight:500">WhatsBOT</div>
+        <div style="font-size:11px;color:var(--text-muted)">Admin login</div>
+      </div>
+    </div>
+    <div class="field-group"><label class="field-label">Email</label><input class="field-input" id="login-email" type="email" placeholder="you@yourdomain.com"></div>
+    <div class="field-group"><label class="field-label">Password</label><input class="field-input" id="login-password" type="password" placeholder="••••••••"></div>
+    <div id="login-error" style="display:none;font-size:12px;color:var(--text-danger);margin-bottom:10px"></div>
+    <button class="btn primary" style="width:100%;justify-content:center;margin-top:6px" onclick="doLogin()"><i class="ti ti-login"></i> Sign in</button>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:14px;text-align:center">Credentials come from your server's <code>.env</code> (ADMIN_EMAIL / ADMIN_PASSWORD)</div>
+  </div>
+</div>
+
+<div class="app" id="main-app" style="display:none">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <div class="logo-mark">
+        <div class="logo-icon"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i></div>
+        <div>
+          <div class="logo-text">WhatsBOT</div>
+          <div class="logo-sub">AI SaaS Platform</div>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="nav-section">Overview</div>
+      <div class="nav-item active" onclick="showPage('dashboard')"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard</div>
+      <div class="nav-item" onclick="showPage('conversations')"><i class="ti ti-messages" aria-hidden="true"></i> Conversations <span class="badge">12</span></div>
+      <div class="nav-item" onclick="showPage('analytics')"><i class="ti ti-chart-bar" aria-hidden="true"></i> Analytics</div>
+      <div class="nav-section">Management</div>
+      <div class="nav-item" onclick="showPage('clients')"><i class="ti ti-users" aria-hidden="true"></i> Clients</div>
+      <div class="nav-item" onclick="showPage('ai-config')"><i class="ti ti-robot" aria-hidden="true"></i> AI Config</div>
+      <div class="nav-item" onclick="showPage('webhooks')"><i class="ti ti-webhook" aria-hidden="true"></i> Webhooks</div>
+      <div class="nav-section">Settings</div>
+      <div class="nav-item" onclick="showPage('billing')"><i class="ti ti-credit-card" aria-hidden="true"></i> Billing</div>
+      <div class="nav-item" onclick="showPage('settings')"><i class="ti ti-settings" aria-hidden="true"></i> Settings</div>
+    </div>
+    <div class="nav-status">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+        <span class="status-dot online" id="server-status-dot"></span>
+        <span style="font-size:12px;color:var(--text-secondary)" id="server-status-text">Checking server…</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:11px;color:var(--text-muted)" id="logged-in-as">&nbsp;</span>
+        <span style="font-size:11px;color:var(--text-accent);cursor:pointer" onclick="logout()">Log out</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="page-title">Dashboard</div>
+      <div class="topbar-actions">
+        <button class="btn" onclick="openModal('notif')"><i class="ti ti-bell" aria-hidden="true"></i></button>
+        <button class="btn primary" onclick="openModal('add-client')"><i class="ti ti-plus" aria-hidden="true"></i> Add Client</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Active clients</div>
+            <div class="stat-value" id="stat-active-clients">–</div>
+            <div class="stat-change" id="stat-total-clients-sub">&nbsp;</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Messages today</div>
+            <div class="stat-value" id="stat-messages-today">–</div>
+            <div class="stat-change" id="stat-messages-total-sub">&nbsp;</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total conversations</div>
+            <div class="stat-value" id="stat-total-convos">–</div>
+            <div class="stat-change">&nbsp;</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Escalations</div>
+            <div class="stat-value" id="stat-escalations">–</div>
+            <div class="stat-change" id="stat-escalations-sub">&nbsp;</div>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Recent conversations</div>
+              <span id="dash-recent-provider-badge"></span>
+            </div>
+            <div id="recent-activity-list">
+              <div class="activity-item"><div style="font-size:12px;color:var(--text-muted);padding:8px 0">Loading…</div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Client status</div>
+              <button class="btn" onclick="showPage('clients')" style="font-size:12px;padding:4px 10px">Manage</button>
+            </div>
+            <div id="client-status-list">
+              <div class="activity-item"><div style="font-size:12px;color:var(--text-muted);padding:8px 0">Loading…</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header">
+            <div class="card-title">Quick setup checklist</div>
+            <span style="font-size:12px;color:var(--text-success)">3 of 5 done</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:10px;padding:6px 0">
+              <i class="ti ti-circle-check" style="color:#25D366;font-size:18px"></i>
+              <span style="font-size:13px">Create your account</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:6px 0">
+              <i class="ti ti-circle-check" style="color:#25D366;font-size:18px"></i>
+              <span style="font-size:13px">Add first client</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:6px 0">
+              <i class="ti ti-circle-check" style="color:#25D366;font-size:18px"></i>
+              <span style="font-size:13px">Configure AI provider</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:6px 0;opacity:.5">
+              <i class="ti ti-circle" style="font-size:18px;color:var(--text-muted)"></i>
+              <span style="font-size:13px">Set Facebook token for a client</span>
+              <button class="btn" onclick="showPage('clients')" style="margin-left:auto;font-size:11px;padding:3px 8px">Set up</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:6px 0;opacity:.5">
+              <i class="ti ti-circle" style="font-size:18px;color:var(--text-muted)"></i>
+              <span style="font-size:13px">Add your first paying client</span>
+              <button class="btn primary" style="margin-left:auto;font-size:11px;padding:3px 8px">Learn how</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLIENTS PAGE -->
+      <div class="page" id="page-clients">
+        <div style="display:flex;gap:10px;margin-bottom:16px">
+          <input class="field-input" placeholder="Search clients…" style="max-width:240px">
+          <button class="btn primary" onclick="openModal('add-client')"><i class="ti ti-plus"></i> Add client</button>
+        </div>
+        <div class="client-list" id="client-list">
+          <div style="font-size:12px;color:var(--text-muted);padding:8px 0">Loading…</div>
+        </div>
+
+        <!-- Inline edit panel -->
+        <div id="client-edit-panel" class="card" style="margin-top:16px;display:none">
+          <div class="card-header">
+            <div class="card-title" id="edit-panel-name">Client settings</div>
+            <button class="btn" onclick="document.getElementById('client-edit-panel').style.display='none'" style="font-size:12px;padding:4px 8px">Close</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div>
+              <span class="section-label">WhatsApp / Meta</span>
+              <div class="field-group"><label class="field-label">Facebook App Token</label><input class="field-input" type="password" id="edit-fbToken" placeholder="EAAxxxxxxxxxx…"></div>
+              <div class="field-group"><label class="field-label">Phone Number ID</label><input class="field-input" id="edit-phoneNumberId" placeholder="1234567890123"></div>
+              <div class="field-group"><label class="field-label">Verify Token (webhook)</label><input class="field-input" id="edit-verifyToken" placeholder="my_secret_token"></div>
+              <div class="field-group"><label class="field-label">WhatsApp Business Account ID</label><input class="field-input" id="edit-wabaId" placeholder="WABA ID"></div>
+            </div>
+            <div>
+              <span class="section-label">AI provider override</span>
+              <div class="field-group"><label class="field-label">AI model (overrides global)</label>
+                <select class="field-input field-select" id="edit-aiProvider">
+                  <option value="global">Use global default</option>
+                  <option value="gemini">Gemini 1.5 Flash (free tier)</option>
+                  <option value="groq">Groq Llama 3 70B (free tier)</option>
+                  <option value="openai">GPT-4o mini</option>
+                  <option value="mistral">Mistral 7B</option>
+                  <option value="claude">Claude Haiku</option>
+                  <option value="cohere">Cohere Command R</option>
+                </select>
+              </div>
+              <div class="field-group"><label class="field-label">AI API key (override)</label><input class="field-input" type="password" id="edit-aiApiKey" placeholder="Leave blank to use global key"></div>
+              <div class="field-group"><label class="field-label">System prompt</label><textarea class="field-input field-textarea" id="edit-systemPrompt" placeholder="You are a helpful assistant for this business…"></textarea></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:12px">
+            <button class="btn primary" onclick="saveClientEdits()"><i class="ti ti-check"></i> Save changes</button>
+            <button class="btn" id="pause-btn" style="color:var(--text-danger);border-color:var(--border-danger)" onclick="togglePauseClient()"><i class="ti ti-player-pause"></i> Pause bot</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI CONFIG PAGE -->
+      <div class="page" id="page-ai-config">
+        <div style="margin-bottom:16px">
+          <div style="font-size:14px;color:var(--text-secondary);margin-bottom:16px">Set global AI defaults. Individual clients can override these.</div>
+          <div class="ai-selector" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:20px">
+            <div class="ai-option selected" onclick="selectAI(this,'gemini')">
+              <div class="ai-option-name">Gemini 1.5 Flash</div>
+              <div class="ai-option-sub">Google · Fast & capable</div>
+              <div class="ai-option-free">Free tier available</div>
+            </div>
+            <div class="ai-option" onclick="selectAI(this,'groq')">
+              <div class="ai-option-name">Groq Llama 3 70B</div>
+              <div class="ai-option-sub">Groq · Ultra-fast inference</div>
+              <div class="ai-option-free">Free tier available</div>
+            </div>
+            <div class="ai-option" onclick="selectAI(this,'mistral')">
+              <div class="ai-option-name">Mistral 7B</div>
+              <div class="ai-option-sub">Mistral AI · Efficient</div>
+              <div class="ai-option-free">Free tier available</div>
+            </div>
+            <div class="ai-option" onclick="selectAI(this,'openai')">
+              <div class="ai-option-name">GPT-4o mini</div>
+              <div class="ai-option-sub">OpenAI · Most popular</div>
+              <div class="ai-option-paid">Pay per use</div>
+            </div>
+            <div class="ai-option" onclick="selectAI(this,'claude')">
+              <div class="ai-option-name">Claude Haiku</div>
+              <div class="ai-option-sub">Anthropic · Smart & safe</div>
+              <div class="ai-option-paid">Pay per use</div>
+            </div>
+            <div class="ai-option" onclick="selectAI(this,'cohere')">
+              <div class="ai-option-name">Cohere Command R</div>
+              <div class="ai-option-sub">Cohere · RAG-optimised</div>
+              <div class="ai-option-free">Free tier available</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px">Global AI settings</div>
+            <div class="field-group"><label class="field-label">Default AI API key</label><input class="field-input" type="password" placeholder="Your Gemini API key" value="AIzaSyxxxxxxxxxxxxxxxx"></div>
+            <div class="field-group"><label class="field-label">Voice note language (transcription)</label>
+              <select class="field-input field-select">
+                <option>Auto-detect</option>
+                <option>English</option>
+                <option>Arabic</option>
+                <option>Hindi</option>
+                <option>Urdu</option>
+                <option>Spanish</option>
+                <option>French</option>
+              </select>
+            </div>
+            <div class="field-group"><label class="field-label">Max tokens per reply</label><input class="field-input" type="number" value="500"></div>
+            <div class="field-group"><label class="field-label">Default system prompt</label><textarea class="field-input field-textarea">You are a helpful AI assistant. Be concise, friendly, and professional. Always respond in the same language the customer writes in.</textarea></div>
+            <button class="btn primary" onclick="toast('AI settings saved!','success')"><i class="ti ti-check"></i> Save</button>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px">Feature flags</div>
+            <div class="toggle-row">
+              <div><div class="toggle-label">Voice note transcription</div><div class="toggle-sub">Whisper API · converts voice → text → AI replies</div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><div class="toggle-label">Image understanding</div><div class="toggle-sub">AI reads & describes images customers send</div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><div class="toggle-label">Human escalation</div><div class="toggle-sub">Say "agent" to reach a human</div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><div class="toggle-label">Conversation memory</div><div class="toggle-sub">Remember last 10 messages per user</div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><div class="toggle-label">Auto language detection</div><div class="toggle-sub">Reply in user's language automatically</div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><div class="toggle-label">Sentiment analysis</div><div class="toggle-sub">Flag angry/distressed users for review</div></div>
+              <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><div class="toggle-label">WhatsApp buttons & lists</div><div class="toggle-sub">Send interactive menus</div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONVERSATIONS PAGE -->
+      <div class="page" id="page-conversations">
+        <div class="conv-layout">
+          <div class="conv-list">
+            <div class="conv-search"><input class="field-input" id="conv-search-input" placeholder="Search conversations…" style="font-size:12px" oninput="renderConvList()"></div>
+            <div id="conv-list-items"><div style="font-size:12px;color:var(--text-muted);padding:10px">Loading…</div></div>
+          </div>
+
+          <!-- Chat area -->
+          <div class="chat-area" id="chat-area" style="display:none">
+            <div class="chat-header">
+              <div class="conv-avatar" id="chat-header-avatar">?</div>
+              <div>
+                <div style="font-size:14px;font-weight:500" id="chat-header-name">—</div>
+                <div style="font-size:11px;color:var(--text-muted)" id="chat-header-sub">—</div>
+              </div>
+              <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
+                <span class="ai-badge gemini" id="chat-header-provider"></span>
+                <button class="btn" id="resolve-btn" style="font-size:12px;padding:4px 8px" onclick="resolveEscalation()"><i class="ti ti-check"></i> Mark resolved</button>
+              </div>
+            </div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-footer">
+              <div class="ai-indicator" id="chat-footer-status"><i class="ti ti-robot" style="font-size:13px;color:#25D366"></i> Bot active · auto-reply on</div>
+              <div class="chat-input-row">
+                <input class="chat-input" placeholder="Send as human (bypasses AI)…" id="chat-override">
+                <button class="send-btn" onclick="sendOverride()"><i class="ti ti-send" aria-hidden="true"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="chat-area" id="chat-empty-state" style="display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:13px">Select a conversation to view messages</div>
+        </div>
+      </div>
+
+      <!-- ANALYTICS PAGE -->
+      <div class="page" id="page-analytics">
+        <div class="analytics-grid">
+          <div class="chart-card">
+            <div class="card-title" style="font-size:13px">Total messages (all time)</div>
+            <div style="font-size:22px;font-weight:500;margin:4px 0" id="an-total-messages">–</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:4px">across all clients</div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title" style="font-size:13px">Resolution rate</div>
+            <div style="font-size:22px;font-weight:500;margin:4px 0" id="an-resolution-rate">–</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:4px" id="an-resolution-sub">&nbsp;</div>
+            <div style="margin-top:12px;background:var(--surface-1);border-radius:20px;height:8px;overflow:hidden">
+              <div id="an-resolution-bar" style="width:0%;height:100%;background:#25D366;border-radius:20px"></div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title" style="font-size:13px">Total conversations</div>
+            <div style="font-size:22px;font-weight:500;margin:4px 0" id="an-total-convos">–</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:4px" id="an-escalations-sub">&nbsp;</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="chart-card">
+            <div class="card-title" style="font-size:13px;margin-bottom:12px">Messages by client</div>
+            <div id="an-by-client"><div style="font-size:12px;color:var(--text-muted)">Loading…</div></div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title" style="font-size:13px;margin-bottom:12px">AI provider usage</div>
+            <div id="an-provider-usage" style="display:flex;flex-direction:column;gap:8px"><div style="font-size:12px;color:var(--text-muted)">Loading…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEBHOOKS PAGE -->
+      <div class="page" id="page-webhooks">
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title" style="margin-bottom:14px">Webhook configuration</div>
+          <div style="background:var(--surface-1);border:0.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-family:var(--font-mono,monospace);font-size:12px;color:var(--text-secondary);margin-bottom:14px">
+            <div style="color:var(--text-muted);font-size:11px;margin-bottom:4px">Your webhook URL pattern</div>
+            <div style="color:var(--text-primary)" id="webhook-url-pattern">…</div>
+          </div>
+          <div style="margin-top:10px;padding:10px 12px;background:var(--bg-warning);border-radius:var(--radius)">
+            <div style="font-size:12px;color:var(--text-warning);font-weight:500">⚡ Setup tip</div>
+            <div style="font-size:12px;color:var(--text-secondary);margin-top:3px">In Meta Business Suite, set each client's webhook URL below and use their Verify Token from the Clients page.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title" style="margin-bottom:14px">Per-client webhook URLs</div>
+          <div id="webhook-client-list" style="display:flex;flex-direction:column;gap:6px"><div style="font-size:12px;color:var(--text-muted)">Loading…</div></div>
+        </div>
+      </div>
+
+      <!-- BILLING PAGE -->
+      <div class="page" id="page-billing">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px">Your plan</div>
+            <div style="padding:16px;background:var(--bg-success);border-radius:var(--radius);margin-bottom:14px">
+              <div style="font-size:18px;font-weight:500;color:var(--text-success)">Starter — $0/mo</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px">Up to 5 clients · 10k messages/mo · Community support</div>
+            </div>
+            <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Sell to your clients and update their tokens manually — you keep 100% margin.</div>
+            <div style="font-size:12px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Suggested client pricing</div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:13px">
+              <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--border)"><span>Basic bot (1 number)</span><span style="color:var(--text-success);font-weight:500">$49–$99/mo</span></div>
+              <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--border)"><span>Pro bot (voice + integrations)</span><span style="color:var(--text-success);font-weight:500">$149–$299/mo</span></div>
+              <div style="display:flex;justify-content:space-between;padding:6px 0"><span>Enterprise (custom AI + memory)</span><span style="color:var(--text-success);font-weight:500">$499+/mo</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px">Client revenue tracker</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border)">
+                <div><div style="font-size:13px">🍕 Pizza Palace</div><div style="font-size:11px;color:var(--text-muted)">Basic plan</div></div>
+                <div style="text-align:right"><div style="font-size:14px;font-weight:500;color:var(--text-success)">$0</div><div style="font-size:11px;color:var(--text-muted)">not invoiced</div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
+                <div><div style="font-size:13px">➕ Add paid client</div><div style="font-size:11px;color:var(--text-muted)">Track their monthly payment</div></div>
+                <button class="btn primary" style="font-size:12px;padding:5px 10px">+ Track</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS PAGE -->
+      <div class="page" id="page-settings">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px">Account</div>
+            <div class="field-group"><label class="field-label">Your name</label><input class="field-input" value="Admin"></div>
+            <div class="field-group"><label class="field-label">Email</label><input class="field-input" value="admin@youragency.com"></div>
+            <div class="field-group"><label class="field-label">Timezone</label><select class="field-input field-select"><option>Asia/Kolkata (IST)</option><option>UTC</option><option>America/New_York</option></select></div>
+            <button class="btn primary" onclick="toast('Settings saved!','success')"><i class="ti ti-check"></i> Save</button>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px">Notifications</div>
+            <div class="toggle-row">
+              <div><div class="toggle-label">Human escalation alerts</div><div class="toggle-sub">Notify when customer requests human</div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><div class="toggle-label">Error alerts</div><div class="toggle-sub">Webhook failures, token expiry</div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><div class="toggle-label">Daily digest</div><div class="toggle-sub">Morning summary of all activity</div></div>
+              <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Client Modal -->
+<div class="modal-overlay" id="modal-add-client">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add new client</div>
+      <button class="btn" onclick="closeModal('add-client')" style="border:none;padding:4px"><i class="ti ti-x" style="font-size:18px"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group"><label class="field-label">Business name</label><input class="field-input" id="new-client-name" placeholder="e.g. Fresh Bakery"></div>
+      <div class="field-group"><label class="field-label">Business type</label><select class="field-input field-select" id="new-client-type"><option value="restaurant">Restaurant / Food</option><option value="retail">Retail</option><option value="healthcare">Healthcare</option><option value="automotive">Automotive</option><option value="real-estate">Real estate</option><option value="general">Other</option></select></div>
+      <div class="field-group"><label class="field-label">Facebook App Token</label><input class="field-input" type="password" id="new-client-fbToken" placeholder="EAAxxxxxxxxxx… (can add later)"></div>
+      <div class="field-group"><label class="field-label">Phone Number ID</label><input class="field-input" id="new-client-phoneNumberId" placeholder="From Meta Business Suite (can add later)"></div>
+      <div class="field-group"><label class="field-label">AI model for this client</label>
+        <select class="field-input field-select" id="new-client-aiProvider">
+          <option value="global">Use global default (Gemini Flash)</option>
+          <option value="groq">Groq Llama 3 (free)</option>
+          <option value="mistral">Mistral 7B (free)</option>
+          <option value="openai">GPT-4o mini</option>
+          <option value="claude">Claude Haiku</option>
+        </select>
+      </div>
+      <div class="field-group"><label class="field-label">System prompt (optional)</label><textarea class="field-input field-textarea" id="new-client-systemPrompt" placeholder="You are a helpful assistant for {business name}…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('add-client')">Cancel</button>
+      <button class="btn primary" onclick="addClient()"><i class="ti ti-check"></i> Add client</button>
+    </div>
+  </div>
+</div>
+
+<!-- Token Update Modal -->
+<div class="modal-overlay" id="modal-token-update">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Update tokens</div>
+      <button class="btn" onclick="closeModal('token-update')" style="border:none;padding:4px"><i class="ti ti-x" style="font-size:18px"></i></button>
+    </div>
+    <div class="modal-body">
+      <div style="padding:10px 12px;background:var(--bg-warning);border-radius:var(--radius);margin-bottom:14px;font-size:12px;color:var(--text-warning)">
+        ⚠ When your customer pays, update their token here. No code changes needed.
+      </div>
+      <div class="field-group"><label class="field-label">New Facebook App Token</label><input class="field-input" type="password" id="token-update-fbToken" placeholder="Paste new EAAxxxxxxxxxx…"></div>
+      <div class="field-group"><label class="field-label">New AI API key (optional)</label><input class="field-input" type="password" id="token-update-aiApiKey" placeholder="Leave blank to keep current"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('token-update')">Cancel</button>
+      <button class="btn primary" onclick="submitTokenUpdate()"><i class="ti ti-check"></i> Update</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notification Modal -->
+<div class="modal-overlay" id="modal-notif">
+  <div class="modal" style="width:360px">
+    <div class="modal-header">
+      <div class="modal-title">Notifications</div>
+      <button class="btn" onclick="closeModal('notif')" style="border:none;padding:4px"><i class="ti ti-x" style="font-size:18px"></i></button>
+    </div>
+    <div class="modal-body" style="padding:0">
+      <div style="padding:12px 16px;border-bottom:0.5px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:12px;background:var(--bg-danger);color:var(--text-danger);padding:2px 6px;border-radius:9px">Urgent</span><span style="font-size:12px;color:var(--text-muted)">2 min ago</span></div>
+        <div style="font-size:13px">Sara L. (MediCare) requested human escalation</div>
+      </div>
+      <div style="padding:12px 16px;border-bottom:0.5px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:12px;background:var(--bg-warning);color:var(--text-warning);padding:2px 6px;border-radius:9px">Warning</span><span style="font-size:12px;color:var(--text-muted)">5 min ago</span></div>
+        <div style="font-size:13px">AutoFix Garage token expired — bot paused</div>
+      </div>
+      <div style="padding:12px 16px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:12px;background:var(--bg-success);color:var(--text-success);padding:2px 6px;border-radius:9px">Info</span><span style="font-size:12px;color:var(--text-muted)">1 hr ago</span></div>
+        <div style="font-size:13px">Pizza Palace hit 300 messages today — record!</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="ti ti-circle-check" aria-hidden="true"></i> <span id="toast-msg"></span></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// CORE: navigation, modals, toast (unchanged from original UI)
+// ═══════════════════════════════════════════════════════════════════════════
+const pages={dashboard:'Dashboard',clients:'Clients',conversations:'Conversations',analytics:'Analytics','ai-config':'AI Configuration',webhooks:'Webhooks',billing:'Billing',settings:'Settings'};
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const pg=document.getElementById('page-'+id);
+  if(pg)pg.classList.add('active');
+  document.getElementById('page-title').textContent=pages[id]||id;
+  document.querySelectorAll('.nav-item').forEach(n=>{if(n.textContent.trim().startsWith(pages[id])||n.getAttribute('onclick')===`showPage('${id}')`)n.classList.add('active')});
+  if(id==='clients') loadClients();
+  if(id==='conversations') loadConversations();
+  if(id==='analytics') loadAnalytics();
+  if(id==='webhooks') loadWebhooksPage();
+  if(id==='dashboard') loadDashboard();
+}
+function openModal(id){document.getElementById('modal-'+id).classList.add('open')}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('open')}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
+function toast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.className='toast '+(type||'');
+  document.getElementById('toast-msg').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+function selectAI(el,ai){document.querySelectorAll('.ai-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');document.getElementById('new-client-aiProvider');toast('Global default AI set to '+el.querySelector('.ai-option-name').textContent+' (saved on next global settings save)','success')}
+function escapeHtml(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function timeAgo(dateStr){
+  const d=new Date(dateStr), diff=(Date.now()-d.getTime())/1000;
+  if(diff<60) return Math.floor(diff)+'s ago';
+  if(diff<3600) return Math.floor(diff/60)+'m ago';
+  if(diff<86400) return Math.floor(diff/3600)+'h ago';
+  return Math.floor(diff/86400)+'d ago';
+}
+function providerBadgeClass(p){return ['gemini','groq','mistral','openai','claude'].includes(p)?p:'gemini'}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AUTH + API
+// ═══════════════════════════════════════════════════════════════════════════
+let TOKEN = localStorage.getItem('whatsbot_token') || null;
+
+async function api(path, opts={}){
+  const headers = { 'Content-Type':'application/json', ...(opts.headers||{}) };
+  if(TOKEN) headers['Authorization'] = 'Bearer '+TOKEN;
+  const res = await fetch(path, { ...opts, headers, body: opts.body ? JSON.stringify(opts.body) : undefined });
+  if(res.status === 401){ logout(); throw new Error('Session expired, please log in again'); }
+  const data = await res.json().catch(()=>({}));
+  if(!res.ok) throw new Error(data.error || 'Request failed ('+res.status+')');
+  return data;
+}
+
+async function doLogin(){
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+  try{
+    const res = await fetch('/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email,password}) });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Login failed');
+    TOKEN = data.token;
+    localStorage.setItem('whatsbot_token', TOKEN);
+    document.getElementById('logged-in-as').textContent = email;
+    showApp();
+  }catch(err){
+    errEl.textContent = err.message;
+    errEl.style.display = 'block';
+  }
+}
+function logout(){
+  TOKEN = null;
+  localStorage.removeItem('whatsbot_token');
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+}
+async function showApp(){
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'flex';
+  loadDashboard();
+}
+
+async function checkHealth(){
+  try{
+    const res = await fetch('/health');
+    const data = await res.json();
+    document.getElementById('server-status-dot').className = 'status-dot ' + (data.dbState===1?'online':'warning');
+    document.getElementById('server-status-text').textContent = data.dbState===1 ? 'All systems online' : 'Database not connected';
+  }catch{
+    document.getElementById('server-status-dot').className = 'status-dot offline';
+    document.getElementById('server-status-text').textContent = 'Server unreachable';
+  }
+}
+
+async function init(){
+  checkHealth();
+  if(TOKEN){
+    try{
+      const v = await api('/admin/verify');
+      document.getElementById('logged-in-as').textContent = v.email;
+      showApp();
+    }catch{ logout(); }
+  } else {
+    document.getElementById('login-screen').style.display = 'flex';
+  }
+}
+document.addEventListener('DOMContentLoaded', init);
+['login-email','login-password'].forEach(id=>{
+  document.addEventListener('DOMContentLoaded', ()=>{
+    document.getElementById(id).addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════════════════
+async function loadDashboard(){
+  try{
+    const d = await api('/admin/dashboard');
+    document.getElementById('stat-active-clients').textContent = d.activeClients;
+    document.getElementById('stat-total-clients-sub').textContent = d.totalClients+' total clients';
+    document.getElementById('stat-messages-today').textContent = d.todayMessages.toLocaleString();
+    document.getElementById('stat-messages-total-sub').textContent = d.totalMessages.toLocaleString()+' all time';
+    document.getElementById('stat-total-convos').textContent = d.totalConvos.toLocaleString();
+
+    const list = document.getElementById('client-status-list');
+    if(d.clients.length===0){
+      list.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:8px 0">No clients yet — add your first one.</div>';
+    } else {
+      list.innerHTML = d.clients.map(c=>`
+        <div class="activity-item">
+          <div class="activity-avatar" style="background:${c.active?'#25D366':'#B8BCB6'};border-radius:8px">${escapeHtml((c.emoji||c.name||'?')[0])}</div>
+          <div style="flex:1">
+            <div class="activity-text">${escapeHtml(c.name)}</div>
+            <div class="activity-meta" style="display:flex;align-items:center;gap:6px">
+              <span class="status-dot ${c.active?'online':'offline'}"></span> ${c.active?'Active':'Paused'} ·
+              <span class="ai-badge ${providerBadgeClass(c.aiProvider)}" style="font-size:10px;padding:1px 5px">${escapeHtml(c.aiProvider||'global')}</span>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted)">${(c.stats?.totalMessages||0).toLocaleString()} msgs</div>
+        </div>`).join('');
+    }
+  }catch(err){ toast(err.message,'error'); }
+
+  try{
+    const convos = await api('/admin/conversations?limit=6');
+    const el = document.getElementById('recent-activity-list');
+    if(convos.length===0){
+      el.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:8px 0">No conversations yet.</div>';
+    } else {
+      el.innerHTML = convos.map(c=>`
+        <div class="activity-item">
+          <div class="activity-avatar" style="${c.escalated?'background:#DC2626':''}">${escapeHtml((c.customerName||c.customerPhone||'?')[0].toUpperCase())}</div>
+          <div>
+            <div class="activity-text">${escapeHtml(c.customerName||c.customerPhone)} ${c.escalated?'⚠ escalated':''}</div>
+            <div class="activity-meta">${escapeHtml(c.clientEmoji||'')} ${escapeHtml(c.clientName||'')} · ${timeAgo(c.updatedAt)} · ${c.lastMessage ? escapeHtml((c.lastMessage.content||'').slice(0,40)) : ''}</div>
+          </div>
+        </div>`).join('');
+    }
+  }catch(err){ /* non-fatal */ }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CLIENTS
+// ═══════════════════════════════════════════════════════════════════════════
+let clientsCache = [];
+let currentEditClientId = null;
+let tokenModalClientId = null;
+
+async function loadClients(){
+  try{
+    clientsCache = await api('/admin/clients');
+    renderClientList();
+  }catch(err){ toast(err.message,'error'); }
+}
+function renderClientList(){
+  const el = document.getElementById('client-list');
+  if(clientsCache.length===0){ el.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:8px 0">No clients yet. Click "Add client" to create one.</div>'; return; }
+  el.innerHTML = clientsCache.map(c=>`
+    <div class="client-card ${c._id===currentEditClientId?'selected':''}" onclick="editClient('${c._id}')">
+      <div class="client-avatar" style="background:var(--bg-accent);font-size:20px">${escapeHtml(c.emoji||'🤖')}</div>
+      <div class="client-info">
+        <div class="client-name">${escapeHtml(c.name)}</div>
+        <div class="client-meta">
+          <span class="status-dot ${c.hasToken ? (c.active?'online':'offline') : 'warning'}"></span>
+          ${c.hasToken ? (c.active?'Active':'Paused') : 'Token missing'} ·
+          <span class="ai-badge ${providerBadgeClass(c.aiProvider)}" style="font-size:10px">${escapeHtml(c.aiProvider||'global')}</span> ·
+          ${(c.stats?.todayMessages||0)} msgs today
+        </div>
+      </div>
+      <div class="client-actions">
+        <button class="btn" onclick="event.stopPropagation();showPage('conversations')" style="font-size:12px;padding:4px 8px"><i class="ti ti-messages"></i></button>
+        <button class="btn ${c.hasToken?'':'primary'}" onclick="event.stopPropagation();openTokenModal('${c._id}')" style="font-size:12px;padding:4px 8px"><i class="ti ti-key"></i> ${c.hasToken?'':'Fix'}</button>
+      </div>
+    </div>`).join('');
+}
+
+async function editClient(id){
+  currentEditClientId = id;
+  renderClientList();
+  try{
+    const c = await api('/admin/clients/'+id);
+    const panel = document.getElementById('client-edit-panel');
+    document.getElementById('edit-panel-name').textContent = c.name + ' — settings';
+    document.getElementById('edit-fbToken').value = '';
+    document.getElementById('edit-fbToken').placeholder = c.hasToken ? '•••••••• (set — leave blank to keep)' : 'Not set yet — paste EAAxxxxx…';
+    document.getElementById('edit-phoneNumberId').value = c.phoneNumberId || '';
+    document.getElementById('edit-verifyToken').value = c.verifyToken || '';
+    document.getElementById('edit-wabaId').value = c.wabaId || '';
+    document.getElementById('edit-aiProvider').value = c.aiProvider || 'global';
+    document.getElementById('edit-aiApiKey').value = '';
+    document.getElementById('edit-aiApiKey').placeholder = c.hasAiKey ? '•••••••• (set — leave blank to keep)' : 'Leave blank to use global key';
+    document.getElementById('edit-systemPrompt').value = c.systemPrompt || '';
+    document.getElementById('pause-btn').innerHTML = c.active ? '<i class="ti ti-player-pause"></i> Pause bot' : '<i class="ti ti-player-play"></i> Activate bot';
+    panel.style.display = 'block';
+    panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }catch(err){ toast(err.message,'error'); }
+}
+
+async function saveClientEdits(){
+  if(!currentEditClientId) return;
+  const update = {
+    phoneNumberId: document.getElementById('edit-phoneNumberId').value.trim(),
+    verifyToken:   document.getElementById('edit-verifyToken').value.trim(),
+    wabaId:        document.getElementById('edit-wabaId').value.trim(),
+    aiProvider:    document.getElementById('edit-aiProvider').value,
+    systemPrompt:  document.getElementById('edit-systemPrompt').value,
+  };
+  const fbToken = document.getElementById('edit-fbToken').value.trim();
+  const aiApiKey = document.getElementById('edit-aiApiKey').value.trim();
+  if(fbToken) update.fbToken = fbToken;
+  if(aiApiKey) update.aiApiKey = aiApiKey;
+  try{
+    await api('/admin/clients/'+currentEditClientId, { method:'PATCH', body: update });
+    toast('Client settings saved!','success');
+    await loadClients();
+  }catch(err){ toast(err.message,'error'); }
+}
+
+async function togglePauseClient(){
+  if(!currentEditClientId) return;
+  const c = clientsCache.find(x=>x._id===currentEditClientId);
+  if(!c) return;
+  try{
+    await api('/admin/clients/'+currentEditClientId, { method:'PATCH', body:{ active: !c.active } });
+    toast(c.active ? 'Client paused' : 'Client activated', c.active ? 'error':'success');
+    await loadClients();
+    editClient(currentEditClientId);
+  }catch(err){ toast(err.message,'error'); }
+}
+
+async function addClient(){
+  const name = document.getElementById('new-client-name').value.trim();
+  if(!name){ toast('Business name is required','error'); return; }
+  const body = {
+    name,
+    businessType: document.getElementById('new-client-type').value,
+    fbToken: document.getElementById('new-client-fbToken').value.trim() || undefined,
+    phoneNumberId: document.getElementById('new-client-phoneNumberId').value.trim() || undefined,
+    aiProvider: document.getElementById('new-client-aiProvider').value,
+    systemPrompt: document.getElementById('new-client-systemPrompt').value.trim() || undefined,
+  };
+  try{
+    await api('/admin/clients', { method:'POST', body });
+    closeModal('add-client');
+    document.getElementById('new-client-name').value='';
+    document.getElementById('new-client-fbToken').value='';
+    document.getElementById('new-client-phoneNumberId').value='';
+    document.getElementById('new-client-systemPrompt').value='';
+    toast(name+' added successfully!','success');
+    loadClients();
+    loadDashboard();
+  }catch(err){ toast(err.message,'error'); }
+}
+
+function openTokenModal(id){
+  tokenModalClientId = id;
+  document.getElementById('token-update-fbToken').value='';
+  document.getElementById('token-update-aiApiKey').value='';
+  openModal('token-update');
+}
+async function submitTokenUpdate(){
+  if(!tokenModalClientId) return;
+  const fbToken = document.getElementById('token-update-fbToken').value.trim();
+  const aiApiKey = document.getElementById('token-update-aiApiKey').value.trim();
+  if(!fbToken && !aiApiKey){ toast('Enter at least one value to update','error'); return; }
+  const update = {};
+  if(fbToken) update.fbToken = fbToken;
+  if(aiApiKey) update.aiApiKey = aiApiKey;
+  try{
+    await api('/admin/clients/'+tokenModalClientId, { method:'PATCH', body: update });
+    closeModal('token-update');
+    toast('Tokens updated successfully!','success');
+    loadClients();
+  }catch(err){ toast(err.message,'error'); }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CONVERSATIONS
+// ═══════════════════════════════════════════════════════════════════════════
+let convosCache = [];
+let currentConvo = null;
+
+async function loadConversations(){
+  try{
+    convosCache = await api('/admin/conversations?limit=50');
+    renderConvList();
+  }catch(err){ toast(err.message,'error'); }
+}
+function renderConvList(){
+  const q = (document.getElementById('conv-search-input')?.value || '').toLowerCase();
+  const filtered = convosCache.filter(c => !q || (c.customerName||'').toLowerCase().includes(q) || (c.customerPhone||'').includes(q) || (c.clientName||'').toLowerCase().includes(q));
+  const el = document.getElementById('conv-list-items');
+  if(filtered.length===0){ el.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:10px">No conversations yet.</div>'; return; }
+  el.innerHTML = filtered.map(c=>`
+    <div class="conv-item ${currentConvo && currentConvo._id===c.id ? 'active':''}" onclick="openConvo('${c.id}')">
+      <div class="conv-avatar" style="${c.escalated?'background:#DC2626':''}">${escapeHtml((c.customerName||c.customerPhone||'?')[0].toUpperCase())}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between"><span class="conv-name">${escapeHtml(c.customerName||c.customerPhone)}</span><span class="conv-time">${timeAgo(c.updatedAt)}</span></div>
+        <div class="conv-preview">${escapeHtml((c.lastMessage?.content||'').slice(0,50))}</div>
+        <div style="margin-top:3px"><span class="ai-badge ${providerBadgeClass(c.aiProvider)}" style="font-size:10px;padding:1px 5px">${escapeHtml(c.clientEmoji||'')} ${escapeHtml(c.clientName||'')}</span></div>
+      </div>
+      ${c.escalated ? '<div class="conv-unread" style="background:#DC2626">!</div>' : ''}
+    </div>`).join('');
+}
+
+async function openConvo(id){
+  try{
+    const c = await api('/admin/conversations/'+id);
+    currentConvo = c;
+    renderConvList();
+    document.getElementById('chat-empty-state').style.display = 'none';
+    document.getElementById('chat-area').style.display = 'flex';
+    document.getElementById('chat-header-avatar').textContent = (c.customerName||c.customerPhone||'?')[0].toUpperCase();
+    document.getElementById('chat-header-name').textContent = c.customerName || c.customerPhone;
+    document.getElementById('chat-header-sub').textContent = (c.clientId?.name||'Unknown client') + ' · ' + c.customerPhone;
+    document.getElementById('chat-header-provider').className = 'ai-badge ' + providerBadgeClass(c.clientId?.aiProvider);
+    document.getElementById('chat-header-provider').innerHTML = '<i class="ti ti-robot" style="font-size:11px"></i> ' + (c.clientId?.aiProvider||'global');
+    document.getElementById('resolve-btn').style.display = c.escalated ? 'inline-flex' : 'none';
+    document.getElementById('chat-footer-status').innerHTML = c.humanTookOver
+      ? '<i class="ti ti-user" style="font-size:13px;color:#EA580C"></i> Human has taken over this conversation'
+      : '<i class="ti ti-robot" style="font-size:13px;color:#25D366"></i> Bot active · auto-reply on';
+
+    const msgsEl = document.getElementById('chat-messages');
+    if(c.messages.length===0){
+      msgsEl.innerHTML = '<div style="text-align:center;font-size:12px;color:var(--text-muted);padding:20px 0">No messages yet</div>';
+    } else {
+      msgsEl.innerHTML = c.messages.map(m=>{
+        const time = new Date(m.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+        const meta = m.role==='assistant'
+          ? `${time} · <i class="ti ti-robot" style="font-size:10px"></i> ${escapeHtml(m.aiProvider||'AI')}${m.latencyMs?' · '+(m.latencyMs/1000).toFixed(1)+'s':''}`
+          : time;
+        return `<div class="msg ${m.role==='user'?'user':'ai'}">${escapeHtml(m.content)}<div class="msg-meta">${meta}</div></div>`;
+      }).join('');
+    }
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+  }catch(err){ toast(err.message,'error'); }
+}
+
+async function sendOverride(){
+  const inp = document.getElementById('chat-override');
+  const text = inp.value.trim();
+  if(!text || !currentConvo) return;
+  try{
+    await api('/admin/conversations/'+currentConvo._id+'/reply', { method:'POST', body:{ text } });
+    inp.value = '';
+    toast('Sent as human','success');
+    openConvo(currentConvo._id);
+  }catch(err){ toast(err.message,'error'); }
+}
+async function resolveEscalation(){
+  if(!currentConvo) return;
+  try{
+    await api('/admin/conversations/'+currentConvo._id+'/resolve', { method:'POST' });
+    toast('Marked resolved','success');
+    openConvo(currentConvo._id);
+    loadConversations();
+  }catch(err){ toast(err.message,'error'); }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ANALYTICS
+// ═══════════════════════════════════════════════════════════════════════════
+async function loadAnalytics(){
+  try{
+    const a = await api('/admin/analytics');
+    document.getElementById('an-total-messages').textContent = a.byClient.reduce((s,c)=>s+(c.total||0),0).toLocaleString();
+    document.getElementById('an-resolution-rate').textContent = a.resolutionRate;
+    document.getElementById('an-resolution-bar').style.width = (parseFloat(a.resolutionRate)||0)+'%';
+    document.getElementById('an-resolution-sub').textContent = a.escalations+' escalated of '+a.totalConversations;
+    document.getElementById('an-total-convos').textContent = a.totalConversations.toLocaleString();
+    document.getElementById('an-escalations-sub').textContent = a.escalations+' needed human help';
+
+    const totalByClient = a.byClient.reduce((s,c)=>s+(c.total||0),0) || 1;
+    const colors=['#25D366','#1A73E8','#7C3AED','#EA580C','#059669','#DC2626'];
+    document.getElementById('an-by-client').innerHTML = a.byClient.length ? a.byClient.map((c,i)=>{
+      const pct = Math.round((c.total/totalByClient)*100);
+      return `<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>${escapeHtml(c.name)}</span><span style="color:var(--text-secondary)">${(c.total||0).toLocaleString()} (${pct}%)</span></div>
+      <div style="background:var(--surface-1);border-radius:4px;height:6px;margin-bottom:10px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${colors[i%colors.length]};border-radius:4px"></div></div>`;
+    }).join('') : '<div style="font-size:12px;color:var(--text-muted)">No clients yet.</div>';
+
+    const providerEntries = Object.entries(a.providerBreakdown||{});
+    const totalProvider = providerEntries.reduce((s,[,v])=>s+v,0) || 1;
+    document.getElementById('an-provider-usage').innerHTML = providerEntries.length ? providerEntries.map(([name,count],i)=>{
+      const pct = Math.round((count/totalProvider)*100);
+      return `<div class="legend-item"><span class="legend-dot" style="background:${colors[i%colors.length]}"></span><span style="flex:1;font-size:13px">${escapeHtml(name)}</span><span style="font-size:12px;color:var(--text-muted)">${pct}%</span></div>`;
+    }).join('') : '<div style="font-size:12px;color:var(--text-muted)">No messages yet.</div>';
+  }catch(err){ toast(err.message,'error'); }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// WEBHOOKS PAGE
+// ═══════════════════════════════════════════════════════════════════════════
+async function loadWebhooksPage(){
+  const base = window.location.origin;
+  document.getElementById('webhook-url-pattern').textContent = base + '/webhook/{client-slug}';
+  try{
+    if(clientsCache.length===0) clientsCache = await api('/admin/clients');
+    const el = document.getElementById('webhook-client-list');
+    el.innerHTML = clientsCache.length ? clientsCache.map(c=>`
+      <div style="padding:8px 0;border-bottom:0.5px solid var(--border)">
+        <div style="font-size:13px;font-weight:500">${escapeHtml(c.emoji||'')} ${escapeHtml(c.name)}</div>
+        <div style="font-family:var(--font-mono,monospace);font-size:11px;color:var(--text-secondary);margin-top:2px">${base}/webhook/${escapeHtml(c.slug)}</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Verify token: ${escapeHtml(c.verifyToken||'—')}</div>
+      </div>`).join('') : '<div style="font-size:12px;color:var(--text-muted)">No clients yet.</div>';
+  }catch(err){ toast(err.message,'error'); }
+}
+</script>
+</body>
+</html>
