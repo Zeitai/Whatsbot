@@ -98,8 +98,18 @@ async function markRead(phoneNumberId, fbToken, messageId) {
 
 /**
  * Core request function
+ *
+ * TEST MODE: if a client has no fbToken/phoneNumberId configured yet
+ * (e.g. while demoing to a client before Meta approval), we skip the
+ * real Graph API call instead of throwing — so the AI pipeline still
+ * runs end-to-end and replies get saved to the conversation, where the
+ * demo frontend (or admin dashboard) can read them.
  */
 async function waRequest(phoneNumberId, fbToken, body) {
+  if (!phoneNumberId || !fbToken) {
+    console.log('[whatsappService] TEST MODE — no fbToken/phoneNumberId set, skipping real WhatsApp API call. Payload:', JSON.stringify(body));
+    return { messaging_product: 'whatsapp', contacts: [], messages: [{ id: `mock.${Date.now()}` }], mock: true };
+  }
   try {
     const res = await axios.post(
       `${WA_BASE}/${phoneNumberId}/messages`,
