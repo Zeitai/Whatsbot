@@ -8,7 +8,7 @@ const axios = require('axios');
 // Default models for each provider (cheapest/fastest tier)
 const DEFAULT_MODELS = {
   gemini:  'gemini-1.5-flash',      // Free: 15 req/min, 1M tokens/day
-  groq:    'llama3-70b-8192',       // Free: 14,400 req/day, very fast
+  groq:    'openai/gpt-oss-120b',       // Free: 14,400 req/day, very fast
   mistral: 'mistral-small-latest',  // Free tier available
   openai:  'gpt-4o-mini',           // Paid but cheapest GPT-4 class
   claude:  'claude-haiku-4-5-20251001', // Paid but cheapest Claude
